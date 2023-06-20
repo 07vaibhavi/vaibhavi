@@ -1,0 +1,186 @@
+1. Admin will have the following functionalities: ⬅️
+
+👉 1. Add new food items. Food Item will have the following details:
+        🔴 FoodID //It should be generated automatically by the application.
+        🔴 Name
+        🔴 Quantity. For eg, 100ml, 250gm, 4pieces etc
+        🔴 Price
+        🔴 Discount
+        🔴 Stock. Amount left in stock in the restaurant.
+
+👉 2. Edit food items using FoodID.
+
+👉 3. View the list of all food items.
+
+👉 4. Remove a food item from the men
+Answer:
+class FoodItem:
+    def _init_(self, name, quantity, price, discount, stock):
+        self.food_id = None  # Will be generated automatically
+        self.name = name
+        self.quantity = quantity
+        self.price = price
+        self.discount = discount
+        self.stock = stock
+
+
+class Admin:
+    def _init_(self):
+        self.food_items = []
+        self.next_food_id = 1
+
+    def add_food_item(self, name, quantity, price, discount, stock):
+        food_item = FoodItem(name, quantity, price, discount, stock)
+        food_item.food_id = self.next_food_id
+        self.next_food_id += 1
+        self.food_items.append(food_item)
+        print("Food item added successfully.")
+
+    def edit_food_item(self, food_id, name, quantity, price, discount, stock):
+        for food_item in self.food_items:
+            if food_item.food_id == food_id:
+                food_item.name = name
+                food_item.quantity = quantity
+                food_item.price = price
+                food_item.discount = discount
+                food_item.stock = stock
+                print("Food item edited successfully.")
+                return
+        print("Food item not found.")
+
+    def view_food_items(self):
+        if not self.food_items:
+            print("No food items available.")
+            return
+        print("List of all food items:")
+        for food_item in self.food_items:
+            print(f"Food ID: {food_item.food_id}")
+            print(f"Name: {food_item.name}")
+            print(f"Quantity: {food_item.quantity}")
+            print(f"Price: {food_item.price}")
+            print(f"Discount: {food_item.discount}")
+            print(f"Stock: {food_item.stock}")
+            print()
+
+    def remove_food_item(self, food_id):
+        for food_item in self.food_items:
+            if food_item.food_id == food_id:
+                self.food_items.remove(food_item)
+                print("Food item removed successfully.")
+                return
+        print("Food item not found.")
+
+
+admin = Admin()
+
+admin.add_food_item("Pizza", "Large", 12.99, 0.2, 5)
+admin.add_food_item("Burger", "Regular", 6.99, 0.1, 10)
+admin.view_food_items()
+
+admin.edit_food_item(1, "Pizza", "Medium", 10.99, 0.15, 3)
+admin.view_food_items()
+
+admin.remove_food_item(2)
+admin.view_food_items()
+
+
+2. The user will have the following functionalities: ⬅️
+
+👉 1. Register on the application. Following to be entered for registration:
+        🔴 Full Name
+        🔴 Phone Number
+        🔴 Email
+        🔴 Address
+        🔴 Password
+
+👉 2. Log in to the application
+
+👉 3. The user will see 3 options:
+        🔴 Place New Order
+        🔴 Order History
+        🔴 Update Profile
+
+👉 4. Place New Order: The user can place a new order at the restaurant.
+        🔵 Show list of food. The list item should as follows:
+            🔴 Tandoori Chicken (4 pieces) [INR 240]
+            🔴 Vegan Burger (1 Piece) [INR 320]
+            🔴 Truffle Cake (500gm) [INR 900]
+
+👉 5. Users should be able to select food by entering an array of numbers. For example, if the user wants to order Vegan Burger and Truffle Cake they should enter [2, 3]
+
+👉 6. Once the items are selected user should see the list of all the items selected. The user will also get an option to place an order.
+
+👉 7. Order History should show a list of all the previous orders
+
+👉 8. Update Profile: the user should be able to update their profile.
+
+Answer:
+class User:
+    def _init_(self, full_name, phone_number, email, address, password):
+        self.full_name = full_name
+        self.phone_number = phone_number
+        self.email = email
+        self.address = address
+        self.password = password
+        self.order_history = []
+
+    def register(self):
+        print("Registration successful.")
+
+    def login(self):
+        print("Login successful.")
+
+    def place_new_order(self):
+        food_menu = {
+            1: {"name": "Tandoori Chicken", "quantity": "4 pieces", "price": 240},
+            2: {"name": "Vegan Burger", "quantity": "1 piece", "price": 320},
+            3: {"name": "Truffle Cake", "quantity": "500gm", "price": 900}
+        }
+
+        print("Food Menu:")
+        for food_id, food_info in food_menu.items():
+            print(f"{food_id}. {food_info['name']} ({food_info['quantity']}) [INR {food_info['price']}]")
+
+        order_items = input("Enter the numbers of food items you want to order (separated by comma): ")
+        order_items = [int(item.strip()) for item in order_items.split(",")]
+
+        selected_items = []
+        for item in order_items:
+            if item in food_menu:
+                selected_items.append(food_menu[item])
+
+        print("Selected Items:")
+        for item in selected_items:
+            print(f"{item['name']} ({item['quantity']}) [INR {item['price']}]")
+
+        confirm_order = input("Do you want to place the order? (yes/no): ")
+        if confirm_order.lower() == "yes":
+            self.order_history.append(selected_items)
+            print("Order placed successfully.")
+        else:
+            print("Order canceled.")
+
+    def order_history(self):
+        if not self.order_history:
+            print("No order history available.")
+            return
+        print("Order History:")
+        for order_items in self.order_history:
+            print("Order:")
+            for item in order_items:
+                print(f"{item['name']} ({item['quantity']}) [INR {item['price']}]")
+            print()
+
+    def update_profile(self):
+        print("Profile updated successfully.")
+
+
+user = User("John Doe", "1234567890", "john@example.com", "123 ABC Street", "password")
+
+user.register()
+user.login()
+
+user.place_new_order()
+user.order_history()
+
+user.update_profile()
